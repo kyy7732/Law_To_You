@@ -1,20 +1,17 @@
-import { Button } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Box, Button, Modal, Typography } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   deleteFreeDeleteApi,
   getFreeDetailApi,
   putFreeModifyApi,
 } from "../../api/board/FreeBoardApi";
-import {
-  getReplyListApi,
-  postReplyApi
-} from '../../api/board/ReplyApi';
-import { API_BASE_URL } from '../../config/host-config';
-import { useAppDispatch, useAppSelector } from '../../store';
-import commUtil from '../../util/commUtil';
-import Editor from '../common/Editor';
+import { getReplyListApi, postReplyApi } from "../../api/board/ReplyApi";
+import { API_BASE_URL } from "../../config/host-config";
+import { useAppDispatch, useAppSelector } from "../../store";
+import commUtil from "../../util/commUtil";
+import Editor from "../common/Editor";
 const BoardFreeReply = () => {
   const dispatch = useAppDispatch;
 
@@ -34,8 +31,9 @@ const BoardFreeReply = () => {
 
   const [detail, setDetail] = useState({});
   const [editor, setEditor] = useState(null);
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
   const [imgUrl, setImgUrl] = useState([]); // 게시판 이미지 url
+  const [title, setTitle] = useState("");
 
   // 모달창 제어 변수들
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -45,12 +43,12 @@ const BoardFreeReply = () => {
 
   // 모달창 스타일
   const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    bgcolor: '#ffffff',
-    border: '2px solid #000',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    bgcolor: "#ffffff",
+    border: "2px solid #000",
     boxShadow: 24,
     p: 4,
   };
@@ -69,7 +67,7 @@ const BoardFreeReply = () => {
         setImgUrl(res.routes);
         setTitle(res.title);
         searchReply();
-        console.log('ImgUrl', res.routes);
+        console.log("ImgUrl", res.routes);
         console.log(mode);
         console.log(loggedUser);
       })
@@ -101,12 +99,12 @@ const BoardFreeReply = () => {
   };
 
   const modalImg = () => {
-    console.log('이미지 ', imgUrl);
+    console.log("이미지 ", imgUrl);
     if (imgUrl == null) return null;
     return imgUrl.map((iUrl, index) => {
       <img
-        className='previewImg'
-        alt='Img'
+        className="previewImg"
+        alt="Img"
         src={iUrl}
         onClick={() => viewImg(index)}
       />;
@@ -164,7 +162,7 @@ const BoardFreeReply = () => {
     content: "",
     rno: "",
   });
-  const [rno, setRno] = useState({ rno: '' });
+  const [rno, setRno] = useState({ rno: "" });
 
   // 댓글 등록
   const onChangeReplyContent = (e) => {
@@ -176,17 +174,17 @@ const BoardFreeReply = () => {
     content: replyContent,
   };
   const replyRegistBtn = () => {
-    if (replyContent === '') {
-      alert('내용을 입력해주세요!');
+    if (replyContent === "") {
+      alert("내용을 입력해주세요!");
       return;
     }
 
     postReplyApi(params).then((res) => {
-      if (typeof res === 'object') {
-        alert('댓글이 등록되었습니다.');
+      if (typeof res === "object") {
+        alert("댓글이 등록되었습니다.");
         setReplyContent(res);
         setRno(res);
-        document.querySelector('.reply-content').value = '';
+        document.querySelector(".reply-content").value = "";
         searchReply();
       }
       return;
@@ -199,19 +197,19 @@ const BoardFreeReply = () => {
     console.log(number);
     console.log(typeof number);
     const res = await fetch(`${API_BASE_URL}/reply?rno=` + number, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'content-type': 'application/json',
-        Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        "content-type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
     });
 
     if (res.status === 200) {
-      alert('댓글이 삭제되었습니다.');
-      document.querySelector('.reply-content').value = '';
+      alert("댓글이 삭제되었습니다.");
+      document.querySelector(".reply-content").value = "";
       searchReply();
     } else {
-      alert('댓글 삭제에 실패했습니다.');
+      alert("댓글 삭제에 실패했습니다.");
     }
   };
 
@@ -301,10 +299,10 @@ const BoardFreeReply = () => {
 
   return (
     <>
-      <div className='board'>
-        <div className='detail-wrapper'>
-          <div className='detail-title'>
-          {detail.trueFalse !== 1 ? (
+      <div className="board">
+        <div className="detail-wrapper">
+          <div className="detail-title">
+            {detail.trueFalse !== 1 ? (
               detail.title
             ) : (
               <input
@@ -315,114 +313,111 @@ const BoardFreeReply = () => {
               ></input>
             )}
           </div>
-          {
-            commUtil.isNotEmpty(detail) && (
-              // (detail.trueFalse === 1 ? (
-              <Editor
-                style={{ height: "200px" }}
-                onChange={setContent} // setter 넣기
-                data={content ?? ""} //getter 넣기
-                editor={setEditor}
-                readOnly={detail.trueFalse !== 1}
-              />
-            )
-          <div className='freeboardFiles'>
+          {commUtil.isNotEmpty(detail) && (
+            // (detail.trueFalse === 1 ? (
+            <Editor
+              style={{ height: "200px" }}
+              onChange={setContent} // setter 넣기
+              data={content ?? ""} //getter 넣기
+              editor={setEditor}
+              readOnly={detail.trueFalse !== 1}
+            />
+          )}
+          <div className="freeboardFiles">
             첨부파일
             <div>
               {imgUrl.map((imgFile, index) => (
                 <img
-                  alt='freeboardImgFile'
+                  alt="freeboardImgFile"
                   src={imgFile}
-                  style={{ width: '90px', height: '90px' }}
+                  style={{ width: "90px", height: "90px" }}
                   onClick={() => viewImg(index)}
                 />
               ))}
             </div>
           </div>
-          <div className='preview-box'>
+          <div className="preview-box">
             <Modal
               open={modalOpen}
               onClose={handleModalClose}
-              aria-labelledby='modal-modal-title'
-              aria-describedby='modal-modal-description'
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
               style={{
-                backgroundColor: 'rgb(250,250,250,0.5)',
+                backgroundColor: "rgb(250,250,250,0.5)",
               }}
             >
               <Box sx={modalStyle}>
-                <Typography
-                  id='modal-modal-description'
-                  sx={{ mt: 2 }}
-                >
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                   {
                     <img
-                      alt='freeboardImg'
+                      alt="freeboardImg"
                       src={imgUrl[clickedImgIdx]}
-                      style={{ width: 'auto', height: 'auto' }}
+                      style={{ width: "auto", height: "auto" }}
                     />
                   }
                 </Typography>
               </Box>
             </Modal>
-        </div>
-
-        {detail.trueFalse === 1 && (
-          <div className="detail-button">
-            <Button
-              className="detail-modify-button"
-              variant="contained"
-              onClick={detailModifyBtn}
-            >
-              수정
-            </Button>
-            <Button
-              className="detail-delete-button"
-              variant="contained"
-              onClick={detailDeleteBtn}
-            >
-              삭제
-            </Button>
           </div>
-        )}
-        <div className="reply-wrapper">
-          <div className="reply-writer">{name}</div>
-          <div className="reply-cb">
-            <input
-              className="reply-content"
-              onChange={onChangeReplyContent}
-              placeholder="댓글을 입력해주세요"
-            ></input>
-            <Button
-              className="reply-button"
-              variant="contained"
-              onClick={replyRegistBtn}
-            >
-              등록
-            </Button>
-          </div>
-        </div>
 
-        {reply.replyList.map((item) => (
-          <div
-            className='replies'
-            // key={item.rno + item.content}
-            key={item.rno}
-          >
-            <div className='replies-writer'>{item.writer}</div>
-            <div className='replies-content'>{item.content}</div>
-            <div className='replies-date'>{item.regDate}</div>
-            {item.deleteButton && (
+          {detail.trueFalse === 1 && (
+            <div className="detail-button">
               <Button
-                className="reply-delete-button"
+                className="detail-modify-button"
                 variant="contained"
-                onClick={replyDeleteBtn}
-                value={item.rno}
+                onClick={detailModifyBtn}
+              >
+                수정
+              </Button>
+              <Button
+                className="detail-delete-button"
+                variant="contained"
+                onClick={detailDeleteBtn}
               >
                 삭제
               </Button>
-            )}
+            </div>
+          )}
+          <div className="reply-wrapper">
+            <div className="reply-writer">{name}</div>
+            <div className="reply-cb">
+              <input
+                className="reply-content"
+                onChange={onChangeReplyContent}
+                placeholder="댓글을 입력해주세요"
+              ></input>
+              <Button
+                className="reply-button"
+                variant="contained"
+                onClick={replyRegistBtn}
+              >
+                등록
+              </Button>
+            </div>
           </div>
-        ))}
+
+          {reply.replyList.map((item) => (
+            <div
+              className="replies"
+              // key={item.rno + item.content}
+              key={item.rno}
+            >
+              <div className="replies-writer">{item.writer}</div>
+              <div className="replies-content">{item.content}</div>
+              <div className="replies-date">{item.regDate}</div>
+              {item.deleteButton && (
+                <Button
+                  className="reply-delete-button"
+                  variant="contained"
+                  onClick={replyDeleteBtn}
+                  value={item.rno}
+                >
+                  삭제
+                </Button>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
